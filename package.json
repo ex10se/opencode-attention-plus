@@ -1,0 +1,18 @@
+{
+  "name": "opencode-attention-plus",
+  "version": "0.1.0",
+  "private": true,
+  "license": "UNLICENSED",
+  "type": "module",
+  "exports": { "./tui": { "types": "./dist/tui.d.ts", "import": "./dist/tui.js" } },
+  "files": ["dist", "README.md", "CHANGELOG.md", "docs"],
+  "scripts": {
+    "test": "node --experimental-strip-types --test test/*.test.ts",
+    "typecheck": "tsc --noEmit",
+    "build": "tsc",
+    "prepack": "npm run typecheck && npm run build"
+  },
+  "dependencies": { "@opencode/plugin": "2.2.5" },
+  "peerDependencies": { "solid-js": "^1.9.17" },
+  "devDependencies": { "typescript": "5.9.3", "@types/node": "22.19.0" }
+}
