@@ -1,0 +1,59 @@
+name: Bug report
+description: Report a problem with the plugin
+title: "[Bug] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        For vulnerabilities, follow the [security policy](https://github.com/ex10se/opencode-attention-plus/blob/main/SECURITY.md) instead of opening a public issue.
+        Do not include tokens, passwords, personal data, or exploit details.
+  - type: input
+    id: versions
+    attributes:
+      label: Plugin and OpenCode versions
+      placeholder: "opencode-attention-plus 0.1.0, OpenCode 2.2.5"
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Operating system and terminal
+      description: OS version, terminal or IDE, and their versions
+    validations:
+      required: true
+  - type: dropdown
+    id: backend
+    attributes:
+      label: Notification backend
+      options:
+        - terminal
+        - macos-fallback
+        - Not sure
+    validations:
+      required: true
+  - type: textarea
+    id: config
+    attributes:
+      label: Redacted configuration
+      description: Include only relevant plugin options and attention settings. Replace personal paths and remove secrets. Do not paste the entire configuration file
+      render: json
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      description: Include a minimal example, which app had focus, approximate wait time, and whether child sessions were involved
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: Describe what happened to the banner and sound. Remove secrets and personal data before including logs
+    validations:
+      required: true

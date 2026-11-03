@@ -10,7 +10,7 @@ function harness(t: any, config: any = {}) {
   const sent: any[] = [], processes: any[] = [];
   const handlers = new Map<string, any>();
   const ctx: any = {
-    options: { notificationBackend: 'macos-fallback', nativeNotifications: true, macosHostBundleId: 'com.jetbrains.pycharm', ...config.options },
+    options: { language: 'ru', notificationBackend: 'macos-fallback', nativeNotifications: true, macosHostBundleId: 'com.jetbrains.pycharm', ...config.options },
     attention: { notify: async (input: any) => {
       sent.push(input);
       if (config.sdkError) throw new Error('SDK sound');

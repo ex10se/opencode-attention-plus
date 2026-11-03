@@ -10,7 +10,7 @@ function harness(t: any, options = {}) {
   const sessions = new Map<string, { id: string; parentID?: string }>([['r', { id: 'r' }]]);
   const running = new Set<string>();
   const root = (id: string): string => sessions.get(id)?.parentID ? root(sessions.get(id)!.parentID!) : id;
-  const ctx = { options, attention: { notify: async (value: any) => { sent.push(value); return { ok: false, notification: false, sound: false }; } }, data: {
+  const ctx = { options: { language: 'ru', ...options }, attention: { notify: async (value: any) => { sent.push(value); return { ok: false, notification: false, sound: false }; } }, data: {
     on: (name: string, handler: (event: any) => void) => { handlers.set(name, handler); return () => { handlers.delete(name); }; },
     session: { get: (id: string) => sessions.get(id), root, family: (id: string) => [...sessions.keys()].filter(key => root(key) === id && key !== id), status: (id: string) => running.has(id) ? 'running' : 'idle' },
   } };
@@ -24,7 +24,7 @@ function harness(t: any, options = {}) {
   return { sent, emit, execution, sessions, running, stop, handlers, ctx, tick: (ms = 2000) => t.mock.timers.tick(ms) };
 }
 
-test('разрешение: быстрый ответ и поздний дубль не уведомляют', (t) => {
+test('permission: a quick reply and late duplicate do not notify', (t) => {
   const h = harness(t);
   h.emit('permission.asked', { id: 'p', sessionID: 'r' });
   h.tick(100);
@@ -37,7 +37,7 @@ test('разрешение: быстрый ответ и поздний дубл
   assert.equal(h.sent[0]?.sound.name, 'permission');
 });
 
-test('завершение корня ждёт потомков и отвеченного уже доставленного вопроса', (t) => {
+test('root completion waits for descendants and an answer to a delivered question', (t) => {
   const h = harness(t);
   h.sessions.set('c', { id: 'c', parentID: 'r' });
   h.sessions.set('g', { id: 'g', parentID: 'c' });
@@ -52,7 +52,7 @@ test('завершение корня ждёт потомков и отвече�
   h.tick(1); assert.deepEqual(h.sent.map(x => x.sound.name), ['question', 'done']);
 });
 
-test('ошибка потомка не превращается в успех корня', (t) => {
+test('a descendant error does not become root success', (t) => {
   const h = harness(t);
   h.sessions.set('c', { id: 'c', parentID: 'r' });
   h.execution('r', 'started'); h.execution('c', 'started');
@@ -60,7 +60,7 @@ test('ошибка потомка не превращается в успех к
   assert.deepEqual(h.sent.map(x => x.sound.name), ['error']);
 });
 
-test('прерывание корня отменяет ожидающий успех и поздние события потомков', (t) => {
+test('root interruption cancels pending success and late descendant events', (t) => {
   const h = harness(t);
   h.sessions.set('c', { id: 'c', parentID: 'r' });
   h.execution('r', 'started'); h.execution('r', 'succeeded'); h.tick(1000);
@@ -69,7 +69,7 @@ test('прерывание корня отменяет ожидающий усп
   assert.deepEqual(h.sent, []);
 });
 
-test('прерывание корня через 100 мс отменяет таймеры вопроса и разрешения всей семьи', (t) => {
+test('root interruption after 100 ms cancels question and permission timers for the family', (t) => {
   const h = harness(t);
   h.sessions.set('c', { id: 'c', parentID: 'r' });
   h.emit('permission.asked', { id: 'p', sessionID: 'r' });
@@ -90,7 +90,7 @@ test('прерывание корня через 100 мс отменяет та�
   h.tick(); assert.deepEqual(h.sent.map(x => x.sound.name), ['done']);
 });
 
-test('новый запуск отменяет старый таймер и сбрасывает результат; дубли завершения подавляются', (t) => {
+test('a new run cancels the old timer and resets the outcome; duplicate completion is suppressed', (t) => {
   const h = harness(t);
   h.execution('r', 'started'); h.execution('r', 'failed'); h.tick(1000);
   h.execution('r', 'started'); h.tick(); assert.deepEqual(h.sent, []);
@@ -102,7 +102,7 @@ test('новый запуск отменяет старый таймер и сб
   assert.deepEqual(h.sent.map(x => x.sound.name), ['done', 'done']);
 });
 
-test('прерывание ребёнка глушит только его поддерево, не соседей и другие корни', (t) => {
+test('child interruption silences only its subtree, not siblings or other roots', (t) => {
   const h = harness(t);
   for (const [id, parentID] of [['c', 'r'], ['g', 'c'], ['sibling', 'r']]) h.sessions.set(id, { id, parentID });
   h.sessions.set('other', { id: 'other' });
@@ -118,7 +118,7 @@ test('прерывание ребёнка глушит только его по�
   h.tick(); assert.equal(h.sent.length, 2);
 });
 
-test('доставленный запрос остаётся блокером после прерывания и нового запуска до ответа', (t) => {
+test('a delivered request blocks completion after interruption and restart until answered', (t) => {
   const h = harness(t);
   h.emit('permission.asked', { id: 'p', sessionID: 'r' }); h.tick();
   assert.deepEqual(h.sent.map(x => x.sound.name), ['permission']);
@@ -131,7 +131,7 @@ test('доставленный запрос остаётся блокером п
   assert.deepEqual(h.sent.map(x => x.sound.name), ['permission', 'done']);
 });
 
-test('enabled=false отключает подписки и уведомления', (t) => {
+test('enabled=false disables subscriptions and notifications', (t) => {
   const h = harness(t, { enabled: false });
   h.emit('permission.asked', { id: 'p', sessionID: 'r' });
   h.execution('r', 'succeeded'); h.tick();
@@ -139,8 +139,8 @@ test('enabled=false отключает подписки и уведомлени�
   assert.equal(h.handlers.size, 0);
 });
 
-test('опции валидируются, пользовательская задержка применяется', (t) => {
-  assert.deepEqual(readOptions({}), { enabled: true, delayMs: 2000, notificationBackend: 'terminal', nativeNotifications: false, macosHostBundleId: undefined });
+test('options are validated and the custom delay is applied', (t) => {
+  assert.deepEqual(readOptions({}), { enabled: true, delayMs: 2000, language: 'auto', notificationBackend: 'terminal', nativeNotifications: false, macosHostBundleId: undefined });
   for (const delayMs of [-1, NaN, Infinity, '2', null]) assert.throws(() => readOptions({ delayMs }), TypeError);
   assert.throws(() => readOptions({ enabled: 'false' }), TypeError);
   const h = harness(t, { delayMs: 10 });
@@ -148,14 +148,14 @@ test('опции валидируются, пользовательская за
   h.tick(1); assert.equal(h.sent.length, 1);
 });
 
-test('ошибка корня уведомляет один раз, включая поздний дубль', (t) => {
+test('root failure notifies once, including after a late duplicate', (t) => {
   const h = harness(t);
   h.execution('r', 'failed'); h.execution('r', 'failed'); h.tick();
   h.execution('r', 'failed'); h.tick();
   assert.deepEqual(h.sent.map(x => x.sound.name), ['error']);
 });
 
-test('большая конечная задержка не переполняет системный таймер', (t) => {
+test('a large finite delay does not overflow the system timer', (t) => {
   const h = harness(t, { delayMs: 2 ** 31 + 10 });
   h.execution('r', 'succeeded'); h.tick(2000);
   assert.deepEqual(h.sent, []);
@@ -163,7 +163,7 @@ test('большая конечная задержка не переполняе
 
 for (const kind of ['question', 'permission']) {
   for (const owner of ['c', 'g']) {
-    test(`${kind}: старт предка через 1331 мс сохраняет дедлайн запроса ${owner}`, t => {
+    test(`${kind}: ancestor start after 1331 ms preserves the deadline for request owner ${owner}`, t => {
       const h = harness(t);
       h.sessions.set('c', { id: 'c', parentID: 'r' });
       h.sessions.set('g', { id: 'g', parentID: 'c' });
@@ -181,7 +181,7 @@ for (const kind of ['question', 'permission']) {
       h.tick(1); assert.deepEqual(h.sent.map(x => x.sound.name), [kind, 'done']);
     });
   }
-  test(`${kind}: новый запуск владельца отменяет собственный запрос без повторной доставки`, t => {
+  test(`${kind}: restarting the owner cancels its request without redelivery`, t => {
     const h = harness(t);
     const create = () => h.emit(kind === 'question' ? 'form.created' : 'permission.asked', kind === 'question' ? { form: { id: 'x', sessionID: 'r' } } : { id: 'x', sessionID: 'r' });
     create(); h.tick(1331); h.execution('r', 'started');
@@ -190,7 +190,7 @@ for (const kind of ['question', 'permission']) {
     h.emit(kind === 'question' ? 'form.replied' : 'permission.replied', { id: 'x', requestID: 'x', sessionID: 'r' });
     h.tick(); assert.deepEqual(h.sent.map(x => x.sound.name), ['done']);
   });
-  test(`${kind}: дубли до/после доставки; ответ после доставки разблокирует корень`, (t) => {
+  test(`${kind}: duplicates before/after delivery; a reply after delivery unblocks the root`, (t) => {
     const h = harness(t);
     const create = () => h.emit(kind === 'question' ? 'form.created' : 'permission.asked', kind === 'question' ? { form: { id: 'x', sessionID: 'r' } } : { id: 'x', sessionID: 'r' });
     create(); h.tick(1000); create(); h.tick(999); assert.equal(h.sent.length, 0);
@@ -201,7 +201,7 @@ for (const kind of ['question', 'permission']) {
   });
 }
 
-test('отмена формы и ответ до создания подавляют устаревший вопрос', (t) => {
+test('form cancellation and a reply before creation suppress a stale question', (t) => {
   const h = harness(t);
   h.emit('form.created', { form: { id: 'q', sessionID: 'r' } });
   h.execution('r', 'succeeded');
@@ -212,7 +212,7 @@ test('отмена формы и ответ до создания подавля
   h.tick(); assert.deepEqual(h.sent.map(x => x.sound.name), ['done']);
 });
 
-test('поздний старт потомка переносит завершение на полные 2 секунды после его конца', (t) => {
+test('a late descendant start postpones completion until two full seconds after it ends', (t) => {
   const h = harness(t);
   h.sessions.set('c', { id: 'c', parentID: 'r' });
   h.execution('r', 'succeeded'); h.tick(1999);
@@ -221,7 +221,7 @@ test('поздний старт потомка переносит заверше
   h.tick(1); assert.equal(h.sent.length, 1);
 });
 
-test('прерванный потомок не даёт успех; конец потомка без конца корня молчит', (t) => {
+test('an interrupted descendant prevents success; descendant completion alone stays silent', (t) => {
   const h = harness(t);
   h.sessions.set('c', { id: 'c', parentID: 'r' });
   h.execution('c', 'succeeded'); h.tick(); assert.deepEqual(h.sent, []);
@@ -229,7 +229,7 @@ test('прерванный потомок не даёт успех; конец �
   h.execution('r', 'succeeded'); h.tick(); assert.deepEqual(h.sent, []);
 });
 
-test('два корня независимы, отсутствующая сессия не уведомляет о завершении', (t) => {
+test('two roots are independent and a missing session does not notify completion', (t) => {
   const h = harness(t);
   h.sessions.set('other', { id: 'other' });
   h.emit('form.created', { form: { id: 'q', sessionID: 'r' } });
@@ -239,7 +239,7 @@ test('два корня независимы, отсутствующая сес�
   assert.deepEqual(h.sent.map(x => x.sound.name), ['question', 'error', 'done']);
 });
 
-test('cleanup снимает подписки и таймеры, reload не дублирует уведомление', (t) => {
+test('cleanup removes subscriptions and timers; reload does not duplicate notifications', (t) => {
   const h = harness(t);
   h.emit('permission.asked', { id: 'p', sessionID: 'r' });
   h.stop(); h.stop(); assert.equal(h.handlers.size, 0);
@@ -250,7 +250,7 @@ test('cleanup снимает подписки и таймеры, reload не д�
   stop(); assert.equal(h.handlers.size, 0);
 });
 
-test('отклонённый attention promise обработан', async (t) => {
+test('a rejected attention promise is handled', async (t) => {
   const h = harness(t);
   h.ctx.attention.notify = async () => { throw new Error('transport'); };
   h.execution('r', 'succeeded'); h.tick();
@@ -258,12 +258,12 @@ test('отклонённый attention promise обработан', async (t) =>
   assert.deepEqual(h.sent, []);
 });
 
-test('вопрос доставляется через 2000 мс, не через 1999', async (t) => {
+test('a question is delivered after 2000 ms, not 1999', async (t) => {
   t.mock.timers.enable({ apis: ['setTimeout'] });
   const sent: unknown[] = [];
   const handlers = new Map<string, (event: any) => void>();
   const stop = startNotifications({
-    options: {},
+    options: { language: 'ru' },
     attention: { notify: async (value: unknown) => { sent.push(value); } },
     data: {
       on: (name: string, handler: (event: any) => void) => { handlers.set(name, handler); return () => handlers.delete(name); },

@@ -1,10 +1,10 @@
-# Сборка, выпуск и откат
+# Build, release, and rollback
 
-## Подготовка пакета
+## Prepare the package
 
-SDK закреплён на OpenCode 2.2.5. При обновлении SDK проверьте типы, установку архива и работу в настоящем TUI
+The SDK is pinned to OpenCode 2.2.5. When updating it, check types, tarball installation, and behavior in a real TUI.
 
-Из корня репозитория:
+From the repository root:
 
 ```sh
 npm ci --ignore-scripts
@@ -17,11 +17,11 @@ npm pack
 shasum -a 256 opencode-attention-plus-0.1.0.tgz
 ```
 
-`npm pack` автоматически запускает проверку типов и сборку. Просмотрите состав архива: в нём должны быть только `dist`, документация и метаданные пакета. После удаления исходников проверяйте отсутствие устаревших файлов в `dist`: TypeScript не удаляет их автоматически
+`npm pack` automatically runs type checking and the build. Inspect the archive: it should contain only `dist`, `LICENSE`, documentation, and package metadata. Check for both READMEs, CONTRIBUTING, SECURITY, CHANGELOG, and the documents in `docs`. After deleting source files, check for stale files in `dist`: TypeScript does not remove them automatically.
 
-Перед выпуском обновите версию в `package.json` и lockfile, а также CHANGELOG. Используйте SemVer; несовместимые изменения в ветке 0.x повышают minor. Замените версию архива в командах, если она изменилась
+Before a release, update the version in `package.json` and the lockfile, and update CHANGELOG. Use SemVer; breaking changes in the 0.x series increment the minor version. Update the archive version in commands when it changes.
 
-## Установка архива
+## Install the tarball
 
 ```sh
 mkdir -p "$HOME/.local/share/opencode-attention-plus-install"
@@ -29,23 +29,25 @@ npm install --prefix "$HOME/.local/share/opencode-attention-plus-install" \
   --ignore-scripts /absolute/path/opencode-attention-plus-0.1.0.tgz
 ```
 
-В `cli.json` укажите абсолютный путь к `node_modules/opencode-attention-plus` внутри этого каталога. Формат конфигурации приведён в [README](../README.md#установка). Сохраните настройки остальных плагинов и отключите штатный `opencode.notifications`
+In `cli.json`, use the absolute path to `node_modules/opencode-attention-plus` inside that directory. See the [README](../README.md#installation) for the configuration format. Preserve other plugins' settings and disable the built-in `opencode.notifications` handler.
 
-Перезапустите TUI: перезагрузка конфигурации не гарантирует перечитывание изменённых зависимостей внутри `node_modules`. Проверьте загрузку плагина и один сигнал в фоне и в фокусе приложения. Для macOS отдельно проверьте включение и выключение `nativeNotifications`
+Restart the TUI: reloading configuration does not guarantee that changed dependencies in `node_modules` are reloaded. Check plugin loading and a notification both in the background and with the host app focused. On macOS, also check `nativeNotifications` enabled and disabled.
 
-## Проверка перед выпуском
+## Release checks
 
-- Убедитесь, что автоматические проверки прошли и архив устанавливается отдельно от репозитория
-- Проверьте нужные сценарии из [матрицы](verification.md); автоматические тесты не подтверждают физический показ баннеров
-- Выполните `npm audit --ignore-scripts` и оцените актуальные предупреждения зависимостей
-- Сохраните предыдущий архив и резервную копию конфигурации для отката
+- Confirm that automated checks pass and the archive installs outside the repository
+- Check the relevant scenarios in the [coverage matrix](verification.md); automated tests do not establish physical banner delivery
+- Run `npm audit --ignore-scripts` and assess current dependency warnings
+- Keep the previous archive and a configuration backup for rollback
 
-Пакет имеет `private: true` и лицензию `UNLICENSED`. Для публикации в npm нужно отдельно определить лицензию и изменить политику публикации; обычный push репозитория этого не делает
+The package is distributed under the [MIT license](../LICENSE), copyright 2026 Mikhail Belyakov. `private: true` is intentional: it prevents npm publication, not use or redistribution under MIT. npm publication requires a separate decision; pushing the repository does not publish it to npm.
 
-## Откат
+An archive from an uncommitted tree is a test candidate, not a published release. Build the release archive from a verified commit and record its commit SHA and the archive's SHA-256. Tagging and publication require separate approval.
 
-1. Установите предыдущий архив той же командой `npm install --prefix ... --ignore-scripts ...`
-2. Восстановите конфигурацию и перезапустите TUI
-3. Проверьте вопрос и завершение в фоне и в фокусе
+## Rollback
 
-Чтобы вернуться к штатным уведомлениям, удалите запись этого плагина и `-opencode.notifications`. Не оставляйте два обработчика включёнными одновременно
+1. Install the previous archive with the same `npm install --prefix ... --ignore-scripts ...` command
+2. Restore the configuration and restart the TUI
+3. Check question and completion notifications in the background and with the host app focused
+
+To return to built-in notifications, remove this plugin's entry and `-opencode.notifications`. Do not leave both handlers enabled.
