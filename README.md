@@ -14,7 +14,7 @@ A question notification on macOS while OpenCode is in the background. Silent rec
 
 ## Installation
 
-npm installation (available after publication), in a dedicated directory:
+npm installation, in a dedicated directory:
 
 ```sh
 mkdir -p "$HOME/.local/share/opencode-attention-plus-install"
@@ -22,7 +22,9 @@ cd "$HOME/.local/share/opencode-attention-plus-install"
 npm install --ignore-scripts opencode-attention-plus@0.1.0
 ```
 
-Use the absolute installed package path, such as `/Users/your-name/.local/share/opencode-attention-plus-install/node_modules/opencode-attention-plus`, in `cli.json` below. `next` marks an experimental release, not a stable `latest` release. A [tarball installation](docs/releasing.md#install-the-tarball) is also supported.
+Version 0.1.0 is experimental and currently available through both `latest` and `next`. Pin `0.1.0` as above for reproducible installation.
+
+Use the absolute installed package path, such as `/Users/your-name/.local/share/opencode-attention-plus-install/node_modules/opencode-attention-plus`, in `cli.json` below. A [tarball installation](docs/releasing.md#install-the-tarball) is also supported.
 
 Alternatively, build from a source checkout:
 

@@ -23,7 +23,7 @@ Keep the version in `package.json`, the lockfile, and CHANGELOG consistent. Use 
 
 ## Prepare npm publication
 
-npm installation (available after publication), in a dedicated directory:
+npm installation, in a dedicated directory:
 
 ```sh
 mkdir -p "$HOME/.local/share/opencode-attention-plus-install"
@@ -31,7 +31,7 @@ cd "$HOME/.local/share/opencode-attention-plus-install"
 npm install --ignore-scripts opencode-attention-plus@0.1.0
 ```
 
-Configure the absolute installed package directory in `cli.json`, as described below. The `next` dist-tag denotes an experimental release, not stable `latest`.
+Version 0.1.0 is experimental and currently available through both `latest` and `next`. Pin `0.1.0` as above for reproducible installation. Configure the absolute installed package directory in `cli.json`, as described below.
 
 Validate the exact candidate archive without publishing:
 
@@ -39,7 +39,7 @@ Validate the exact candidate archive without publishing:
 npm publish /absolute/path/opencode-attention-plus-0.1.0.tgz --dry-run --tag next --access public --registry=https://registry.npmjs.org/
 ```
 
-A successful dry run does not establish registry authentication, package ownership, or permission to publish. Ensure the GitHub release tag and archive correspond to the published npm version.
+A successful dry run does not establish registry authentication, package ownership, or permission to publish. Select the intended dist-tag explicitly with `--tag`; this does not guarantee that other tags are absent. Verify the registry's dist-tags after publication. Ensure the GitHub release tag and archive correspond to the published npm version.
 
 ## Install the tarball
 

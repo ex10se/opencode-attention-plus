@@ -14,7 +14,7 @@ TUI-плагин для OpenCode: уведомляет о вопросах, за
 
 ## Установка
 
-Установка из npm (доступна после публикации), в отдельный каталог:
+Установка из npm в отдельный каталог:
 
 ```sh
 mkdir -p "$HOME/.local/share/opencode-attention-plus-install"
@@ -22,7 +22,9 @@ cd "$HOME/.local/share/opencode-attention-plus-install"
 npm install --ignore-scripts opencode-attention-plus@0.1.0
 ```
 
-В `cli.json` ниже укажите абсолютный путь установленного пакета, например `/Users/your-name/.local/share/opencode-attention-plus-install/node_modules/opencode-attention-plus`. Канал `next` обозначает экспериментальный выпуск, а не стабильный `latest`. Также доступна [установка из tarball](docs/releasing.md#install-the-tarball)
+Версия 0.1.0 экспериментальная и сейчас доступна по обеим меткам: `latest` и `next`. Для воспроизводимой установки фиксируйте `0.1.0`, как в команде выше
+
+В `cli.json` ниже укажите абсолютный путь установленного пакета, например `/Users/your-name/.local/share/opencode-attention-plus-install/node_modules/opencode-attention-plus`. Также доступна [установка из tarball](docs/releasing.md#install-the-tarball)
 
 Другой вариант - сборка из каталога исходников:
 
