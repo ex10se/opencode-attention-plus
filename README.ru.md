@@ -4,7 +4,7 @@
 
 TUI-плагин для OpenCode: уведомляет о вопросах, запросах разрешения, завершении работы и ошибках. Баннеры появляются в фоне, звук не зависит от фокуса. Задержка по умолчанию - 2 секунды
 
-Экспериментальная версия 0.1.0. Совместимость: OpenCode 2.2.5. Плагин использует публичный SDK и не требует изменений ядра
+Экспериментальная версия 0.1.1. Совместимость: OpenCode 2.2.5. Плагин использует публичный SDK и не требует изменений ядра
 
 ## Демо
 
@@ -19,10 +19,10 @@ TUI-плагин для OpenCode: уведомляет о вопросах, за
 ```sh
 mkdir -p "$HOME/.local/share/opencode-attention-plus-install"
 cd "$HOME/.local/share/opencode-attention-plus-install"
-npm install --ignore-scripts opencode-attention-plus@0.1.0
+npm install --ignore-scripts opencode-attention-plus@0.1.1
 ```
 
-Версия 0.1.0 экспериментальная и сейчас доступна по обеим меткам: `latest` и `next`. Для воспроизводимой установки фиксируйте `0.1.0`, как в команде выше
+Этот выпуск экспериментальный. Метки npm, например `latest` и `next`, могут указывать на разные версии и не гарантируют стабильность. Для воспроизводимой установки фиксируйте `0.1.1`, как в команде выше
 
 В `cli.json` ниже укажите абсолютный путь установленного пакета, например `/Users/your-name/.local/share/opencode-attention-plus-install/node_modules/opencode-attention-plus`. Также доступна [установка из tarball](docs/releasing.md#install-the-tarball)
 

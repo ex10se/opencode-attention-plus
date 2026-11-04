@@ -4,7 +4,7 @@
 
 A TUI plugin for OpenCode that notifies you about questions, permission requests, completion, and errors. Banners appear in the background; sound does not depend on focus. The default delay is 2 seconds.
 
-Experimental version 0.1.0. Compatibility: OpenCode 2.2.5. Uses the public SDK without core modifications.
+Experimental version 0.1.1. Compatibility: OpenCode 2.2.5. Uses the public SDK without core modifications.
 
 ## Demo
 
@@ -19,10 +19,10 @@ npm installation, in a dedicated directory:
 ```sh
 mkdir -p "$HOME/.local/share/opencode-attention-plus-install"
 cd "$HOME/.local/share/opencode-attention-plus-install"
-npm install --ignore-scripts opencode-attention-plus@0.1.0
+npm install --ignore-scripts opencode-attention-plus@0.1.1
 ```
 
-Version 0.1.0 is experimental and currently available through both `latest` and `next`. Pin `0.1.0` as above for reproducible installation.
+This release is experimental. npm tags such as `latest` and `next` can point to different versions and do not guarantee stability. Pin `0.1.1` as above for reproducible installation.
 
 Use the absolute installed package path, such as `/Users/your-name/.local/share/opencode-attention-plus-install/node_modules/opencode-attention-plus`, in `cli.json` below. A [tarball installation](docs/releasing.md#install-the-tarball) is also supported.
 

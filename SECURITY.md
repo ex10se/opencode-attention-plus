@@ -3,7 +3,7 @@
 ## Supported versions
 
 Security fixes target only the current experimental 0.1.x series.
-The current version is 0.1.0; verified compatibility is OpenCode 2.2.5.
+The current version is 0.1.1; verified compatibility is OpenCode 2.2.5.
 No fixed response or fix delivery times are guaranteed.
 
 ## Reporting a vulnerability

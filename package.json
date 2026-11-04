@@ -1,6 +1,6 @@
 {
   "name": "opencode-attention-plus",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "license": "MIT",
   "description": "OpenCode TUI plugin for delayed question, permission, completion, and error notifications",
   "repository": { "type": "git", "url": "git+https://github.com/ex10se/opencode-attention-plus.git" },

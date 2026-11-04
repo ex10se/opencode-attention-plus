@@ -14,7 +14,7 @@ npm run build
 ATTENTION_PACK_TEST=1 npm test
 npm pack --dry-run
 npm pack
-shasum -a 256 opencode-attention-plus-0.1.0.tgz
+shasum -a 256 opencode-attention-plus-0.1.1.tgz
 ```
 
 `npm pack` automatically runs type checking and the build. Inspect the archive: it should contain only `dist`, `LICENSE`, documentation, and package metadata. Check for both READMEs, CONTRIBUTING, SECURITY, CHANGELOG, and the documents in `docs`. After deleting source files, check for stale files in `dist`: TypeScript does not remove them automatically.
@@ -28,15 +28,15 @@ npm installation, in a dedicated directory:
 ```sh
 mkdir -p "$HOME/.local/share/opencode-attention-plus-install"
 cd "$HOME/.local/share/opencode-attention-plus-install"
-npm install --ignore-scripts opencode-attention-plus@0.1.0
+npm install --ignore-scripts opencode-attention-plus@0.1.1
 ```
 
-Version 0.1.0 is experimental and currently available through both `latest` and `next`. Pin `0.1.0` as above for reproducible installation. Configure the absolute installed package directory in `cli.json`, as described below.
+This release is experimental. npm tags such as `latest` and `next` can point to different versions and do not guarantee stability. Pin `0.1.1` as above for reproducible installation. Configure the absolute installed package directory in `cli.json`, as described below.
 
 Validate the exact candidate archive without publishing:
 
 ```sh
-npm publish /absolute/path/opencode-attention-plus-0.1.0.tgz --dry-run --tag next --access public --registry=https://registry.npmjs.org/
+npm publish /absolute/path/opencode-attention-plus-0.1.1.tgz --dry-run --tag next --access public --registry=https://registry.npmjs.org/
 ```
 
 A successful dry run does not establish registry authentication, package ownership, or permission to publish. Select the intended dist-tag explicitly with `--tag`; this does not guarantee that other tags are absent. Verify the registry's dist-tags after publication. Ensure the GitHub release tag and archive correspond to the published npm version.
@@ -46,7 +46,7 @@ A successful dry run does not establish registry authentication, package ownersh
 ```sh
 mkdir -p "$HOME/.local/share/opencode-attention-plus-install"
 npm install --prefix "$HOME/.local/share/opencode-attention-plus-install" \
-  --ignore-scripts /absolute/path/opencode-attention-plus-0.1.0.tgz
+  --ignore-scripts /absolute/path/opencode-attention-plus-0.1.1.tgz
 ```
 
 In `cli.json`, use the absolute path to `node_modules/opencode-attention-plus` inside that directory. See the [README](../README.md#installation) for the configuration format. Preserve other plugins' settings and disable the built-in `opencode.notifications` handler.

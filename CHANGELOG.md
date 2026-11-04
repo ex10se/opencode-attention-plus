@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.1
+
+- Corrected packaged installation instructions and descriptions of npm distribution tags
+- Kept notification behavior unchanged
+
 ## 0.1.0
 
 - Enabled npm distribution and added installation instructions

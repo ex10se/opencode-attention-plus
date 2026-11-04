@@ -1,6 +1,6 @@
 # Contributing
 
-This project is experimental. The current version is 0.1.0, targeting OpenCode 2.2.5.
+This project is experimental. The current version is 0.1.1, targeting OpenCode 2.2.5.
 It is distributed under the [MIT license](LICENSE).
 
 ## Setup and checks
