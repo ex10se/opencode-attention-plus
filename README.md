@@ -14,6 +14,18 @@ A question notification on macOS while OpenCode is in the background. Silent rec
 
 ## Installation
 
+npm installation (available after publication), in a dedicated directory:
+
+```sh
+mkdir -p "$HOME/.local/share/opencode-attention-plus-install"
+cd "$HOME/.local/share/opencode-attention-plus-install"
+npm install --ignore-scripts opencode-attention-plus@0.1.0
+```
+
+Use the absolute installed package path, such as `/Users/your-name/.local/share/opencode-attention-plus-install/node_modules/opencode-attention-plus`, in `cli.json` below. `next` marks an experimental release, not a stable `latest` release. A [tarball installation](docs/releasing.md#install-the-tarball) is also supported.
+
+Alternatively, build from a source checkout:
+
 Building requires Node.js with `--experimental-strip-types` support and npm.
 
 ```sh
@@ -128,4 +140,4 @@ The plugin uses OpenCode's public SDK. OpenCode is available under the [MIT lice
 
 ## License
 
-[MIT](LICENSE), copyright 2026 Mikhail Belyakov. `private: true` disables npm publication only; it does not restrict use under the license.
+[MIT](LICENSE), copyright 2026 Mikhail Belyakov.

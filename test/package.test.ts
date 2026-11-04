@@ -10,7 +10,7 @@ test('package exposes only the TUI entrypoint and pins the SDK', () => {
   const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
   assert.deepEqual(Object.keys(pkg.exports), ['./tui']);
   assert.equal(pkg.dependencies['@opencode/plugin'], '2.2.5');
-  assert.equal(pkg.private, true);
+  assert.notEqual(pkg.private, true, 'package must allow npm publication');
   assert.equal(pkg.license, 'MIT');
   assert.equal(plugin.id, 'opencode-attention-plus');
   assert.equal(typeof plugin.setup, 'function');

@@ -19,7 +19,27 @@ shasum -a 256 opencode-attention-plus-0.1.0.tgz
 
 `npm pack` automatically runs type checking and the build. Inspect the archive: it should contain only `dist`, `LICENSE`, documentation, and package metadata. Check for both READMEs, CONTRIBUTING, SECURITY, CHANGELOG, and the documents in `docs`. After deleting source files, check for stale files in `dist`: TypeScript does not remove them automatically.
 
-Before a release, update the version in `package.json` and the lockfile, and update CHANGELOG. Use SemVer; breaking changes in the 0.x series increment the minor version. Update the archive version in commands when it changes.
+Keep the version in `package.json`, the lockfile, and CHANGELOG consistent. Use SemVer; breaking changes in the 0.x series increment the minor version. Update the archive version in commands when it changes.
+
+## Prepare npm publication
+
+npm installation (available after publication), in a dedicated directory:
+
+```sh
+mkdir -p "$HOME/.local/share/opencode-attention-plus-install"
+cd "$HOME/.local/share/opencode-attention-plus-install"
+npm install --ignore-scripts opencode-attention-plus@0.1.0
+```
+
+Configure the absolute installed package directory in `cli.json`, as described below. The `next` dist-tag denotes an experimental release, not stable `latest`.
+
+Validate the exact candidate archive without publishing:
+
+```sh
+npm publish /absolute/path/opencode-attention-plus-0.1.0.tgz --dry-run --tag next --access public --registry=https://registry.npmjs.org/
+```
+
+A successful dry run does not establish registry authentication, package ownership, or permission to publish. Ensure the GitHub release tag and archive correspond to the published npm version.
 
 ## Install the tarball
 
@@ -40,9 +60,9 @@ Restart the TUI: reloading configuration does not guarantee that changed depende
 - Run `npm audit --ignore-scripts` and assess current dependency warnings
 - Keep the previous archive and a configuration backup for rollback
 
-The package is distributed under the [MIT license](../LICENSE), copyright 2026 Mikhail Belyakov. `private: true` is intentional: it prevents npm publication, not use or redistribution under MIT. npm publication requires a separate decision; pushing the repository does not publish it to npm.
+The package is distributed under the [MIT license](../LICENSE), copyright 2026 Mikhail Belyakov.
 
-An archive from an uncommitted tree is a test candidate, not a published release. Build the release archive from a verified commit and record its commit SHA and the archive's SHA-256. Tagging and publication require separate approval.
+Build the release archive from a verified commit. Verify the release tag points to that commit, and record the commit SHA and the archive's SHA-256.
 
 ## Rollback
 

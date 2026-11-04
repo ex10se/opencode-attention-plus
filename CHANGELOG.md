@@ -2,6 +2,7 @@
 
 ## 0.1.0
 
+- Enabled npm distribution and added installation instructions
 - Added notification language selection: `auto` / `en` / `ru`; the system language is detected once, with English as the fallback for unsupported locales or lookup errors
 - Added a TUI plugin for OpenCode 2.2.5 with the `opencode-attention-plus/tui` export
 - Added question, permission, completion, and error notifications with a configurable delay
